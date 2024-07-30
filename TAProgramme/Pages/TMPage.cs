@@ -1,4 +1,5 @@
-﻿using OpenQA.Selenium;
+﻿using NUnit.Framework;
+using OpenQA.Selenium;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,9 +13,17 @@ namespace TAProgramme.Pages
     {
         public void CreateTimeRecord (IWebDriver driver)
         {
-            // Click on Create New button
-            IWebElement createNewButton = driver.FindElement(By.XPath("//*[@id='container']/p/a"));
-            createNewButton.Click();
+            try
+            {
+                // Click on Create New button
+                IWebElement createNewButton = driver.FindElement(By.XPath("//*[@id='container']/p/a"));
+                createNewButton.Click();
+            }
+            catch (Exception ex)
+            {
+                Assert.Fail("Create New button not found");
+            }
+           
 
             // Select Time in TypeCode dropdown
             IWebElement typeCodeDropdown = driver.FindElement(By.XPath("//*[@id='TimeMaterialEditForm']/div/div[1]/div/span[1]/span/span[1]"));
@@ -48,14 +57,7 @@ namespace TAProgramme.Pages
 
             IWebElement newCode = driver.FindElement(By.XPath("//*[@id='tmsGrid']/div[3]/table/tbody/tr[last()]/td[1]"));
 
-            if (newCode.Text == "TA Programme")
-            {
-                Console.WriteLine("Time record created successfully, test passed.");
-            }
-            else
-            {
-                Console.WriteLine("Time record not created, test failed.");
-            }
+            Assert.That(newCode.Text == "TA Programme", "Time record not created successfully");
         }
 
         public void EditTimeRecord(IWebDriver driver)
