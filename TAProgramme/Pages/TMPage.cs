@@ -54,20 +54,107 @@ namespace TAProgramme.Pages
             IWebElement goToLastPageButton = driver.FindElement(By.XPath("//*[@id=\"tmsGrid\"]/div[4]/a[4]/span"));
             goToLastPageButton.Click();
             Thread.Sleep(2000);
-
-            IWebElement newCode = driver.FindElement(By.XPath("//*[@id='tmsGrid']/div[3]/table/tbody/tr[last()]/td[1]"));
-
-            Assert.That(newCode.Text == "TA Programme", "Time record not created successfully");
         }
 
-        public void EditTimeRecord(IWebDriver driver)
+        public string GetCode(IWebDriver driver)
         {
-            // Put your code here           
+            IWebElement newCode = driver.FindElement(By.XPath("//*[@id='tmsGrid']/div[3]/table/tbody/tr[last()]/td[1]"));
+            return newCode.Text;
+        }
+
+        public string GetDescription(IWebDriver driver)
+        {
+            IWebElement newDescription = driver.FindElement(By.XPath("//*[@id='tmsGrid']/div[3]/table/tbody/tr[last()]/td[3]"));
+            return newDescription.Text;
+        }
+
+        public string GetPrice(IWebDriver driver) {
+            IWebElement newPrice = driver.FindElement(By.XPath("//*[@id='tmsGrid']/div[3]/table/tbody/tr[last()]/td[4]"));
+            return newPrice.Text;
+        }
+
+        public void EditTimeRecord(IWebDriver driver, string code)
+        {
+            Thread.Sleep(4000);
+            //Select a record and click edit button
+            IWebElement lastPageButton = driver.FindElement(By.XPath("//*[@id=\"tmsGrid\"]/div[4]/a[4]/span"));
+            lastPageButton.Click();
+            Thread.Sleep(2000);
+
+
+            IWebElement editButton = driver.FindElement(By.XPath("//*[@id=\"tmsGrid\"]/div[3]/table/tbody/tr[last()]/td[5]/a[1]"));
+            editButton.Click();
+
+            IWebElement codeTextbox = driver.FindElement(By.Id("Code"));
+            codeTextbox.Clear();
+            codeTextbox.SendKeys(code);
+            Thread.Sleep(2000);
+
+            IWebElement descriptionTextbox = driver.FindElement(By.Id("Description"));
+            descriptionTextbox.Clear();
+            descriptionTextbox.SendKeys("Edited Description");
+            Thread.Sleep(2000);
+
+
+            //Click save
+            IWebElement saveButton = driver.FindElement(By.Id("SaveButton"));
+            saveButton.Click();
+            Thread.Sleep(1500);
+
+            IWebElement llastPageButton = driver.FindElement(By.XPath("//*[@id=\"tmsGrid\"]/div[4]/a[4]/span"));
+            llastPageButton.Click();
+            Thread.Sleep(1500);
+
+
+            Thread.Sleep(1500);
+        }
+
+        public string GetEditedCode(IWebDriver driver)
+        {
+            IWebElement editedCode = driver.FindElement(By.XPath("//*[@id=\"tmsGrid\"]/div[3]/table/tbody/tr[last()]/td[1]"));
+            return editedCode.Text;
+        }
+
+        public string GetEditedDescription(IWebDriver driver)
+        {
+            IWebElement editedDescription = driver.FindElement(By.XPath("//*[@id=\"tmsGrid\"]/div[3]/table/tbody/tr[last()]/td[3]"));
+            return editedDescription.Text;
         }
 
         public void DeleteTimeRecord(IWebDriver driver)
         {
-            // Put your code here           
+            Thread.Sleep(4000); Thread.Sleep(2000);
+            IWebElement llastPageButton = driver.FindElement(By.XPath("//*[@id=\"tmsGrid\"]/div[4]/a[4]/span"));
+            llastPageButton.Click();
+            Thread.Sleep(3000);
+
+            IWebElement deleteButton = driver.FindElement(By.XPath("//*[@id=\"tmsGrid\"]/div[3]/table/tbody/tr[last()]/td[5]/a[2]"));
+            deleteButton.Click();
+
+            Thread.Sleep(1500);
+
+            //Click OK to delete
+            driver.SwitchTo().Alert().Accept();
+
+            Thread.Sleep(3000);
+
+            driver.Navigate().Refresh();
+
+            Thread.Sleep(4000);
+            //Check if the record is deleted
+            IWebElement lastPageButton = driver.FindElement(By.XPath("//*[@id=\"tmsGrid\"]/div[4]/a[4]/span"));
+            lastPageButton.Click();
+
+            IWebElement deletedCode = driver.FindElement(By.XPath("//*[@id=\"tmsGrid\"]/div[3]/table/tbody/tr[last()]/td[1]"));
+
+            if (deletedCode.Text != "Edit Code TA Programme")
+            {
+                Console.WriteLine("Record deleted successfully");
+            }
+            else
+            {
+                Console.WriteLine("Record has not been delete.");
+            }
         }
 
 
